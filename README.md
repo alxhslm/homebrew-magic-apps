@@ -11,7 +11,7 @@ Official Homebrew tap for [Magic Apps](https://github.com/alxhslm/magic-apps) ([
 
 ## Usage
 
-You can tap the repository once:
+Tap the repository:
 
 ```sh
 brew tap alxhslm/magic-apps
@@ -33,3 +33,9 @@ tap "alxhslm/magic-apps"
 cask "magimail"
 cask "magical"
 ```
+
+## Trademark Disclaimer
+
+"Magic Apps", "Magimail", "Magical", and their respective icons and artwork are trademarks of Alex Haslam.
+
+Magic Apps is an independent project and is not affiliated with, endorsed by, or sponsored by Google LLC. Gmail, Google Calendar, Google Workspace, Google Tasks, Google Meet and Google Drive are trademarks of Google LLC. macOS, Mac, Apple, Finder, Safari, Mail and Messages are trademarks of Apple Inc.
