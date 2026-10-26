@@ -1,6 +1,6 @@
 # Homebrew Tap for Magic Apps
 
-Official Homebrew tap for [Magic Apps](https://macmagic.app): high-performance native macOS desktop applications for Google Workspace.
+Official Homebrew tap for [Magic Apps](https://github.com/alxhslm/magic-apps) ([macmagic.app](https://macmagic.app)): native macOS desktop applications for Google Workspace.
 
 ## Available Casks
 
@@ -19,7 +19,7 @@ brew install --cask magimail
 brew install --cask magical
 ```
 
-Or install directly in a single command:
+Or install directly in one command:
 
 ```sh
 brew install --cask alxhslm/magic-apps/magimail
