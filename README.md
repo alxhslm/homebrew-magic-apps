@@ -1,18 +1,35 @@
-# Alxhslm Tap
+# Homebrew Tap for Magic Apps
 
-## How do I install these formulae?
+Official Homebrew tap for [Magic Apps](https://macmagic.app): native macOS desktop applications for Google Workspace.
 
-`brew install alxhslm/tap/<formula>`
+## Available Casks
 
-Or `brew tap alxhslm/tap` and then `brew install <formula>`.
+| Cask | Description | Install Command |
+| :--- | :--- | :--- |
+| **`magimail`** | Native macOS client for Gmail | `brew install --cask alxhslm/tap/magimail` |
+| **`magical`** | Native macOS client for Google Calendar | `brew install --cask alxhslm/tap/magical` |
 
-Or, in a `brew bundle` `Brewfile`:
+## Usage
+
+You can install either app directly:
+
+```sh
+brew install --cask alxhslm/tap/magimail
+brew install --cask alxhslm/tap/magical
+```
+
+Or tap the repository first:
+
+```sh
+brew tap alxhslm/tap
+brew install --cask magimail
+brew install --cask magical
+```
+
+In a `Brewfile`:
 
 ```ruby
 tap "alxhslm/tap"
-brew "<formula>"
+cask "magimail"
+cask "magical"
 ```
-
-## Documentation
-
-`brew help`, `man brew` or check [Homebrew's documentation](https://docs.brew.sh).
