@@ -4,16 +4,16 @@ cask "magimail" do
 
   url "https://github.com/alxhslm/magic-apps/releases/download/magimail-v#{version}/Magimail-#{version}-arm64.dmg"
   name "Magimail"
-  desc "Native macOS Gmail client"
-  homepage "https://macmagic.app"
+  desc "Gmail client"
+  homepage "https://macmagic.app/"
 
   livecheck do
     url "https://github.com/alxhslm/magic-apps"
     regex(/^magimail-v?(\d+(?:\.\d+)+)$/i)
   end
 
-  depends_on macos: :sonoma
   depends_on arch: :arm64
+  depends_on macos: :sonoma
 
   app "Magimail.app"
 

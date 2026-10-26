@@ -4,16 +4,16 @@ cask "magical" do
 
   url "https://github.com/alxhslm/magic-apps/releases/download/magical-v#{version}/Magical-#{version}-arm64.dmg"
   name "Magical"
-  desc "Native macOS Google Calendar client"
-  homepage "https://macmagic.app"
+  desc "Google Calendar client"
+  homepage "https://macmagic.app/"
 
   livecheck do
     url "https://github.com/alxhslm/magic-apps"
     regex(/^magical-v?(\d+(?:\.\d+)+)$/i)
   end
 
-  depends_on macos: :sonoma
   depends_on arch: :arm64
+  depends_on macos: :sonoma
 
   app "Magical.app"
 
