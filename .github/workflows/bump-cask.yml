@@ -1,0 +1,120 @@
+name: Bump Cask
+
+on:
+  workflow_dispatch:
+    inputs:
+      app:
+        description: 'App name (magical or magimail)'
+        required: true
+        type: choice
+        options:
+          - magical
+          - magimail
+      version:
+        description: 'New version (e.g. 0.2.0)'
+        required: true
+        type: string
+      sha256:
+        description: 'SHA256 checksum (optional, computed from release if omitted)'
+        required: false
+        type: string
+  repository_dispatch:
+    types: [bump-cask]
+
+concurrency:
+  group: bump-cask-${{ github.event.inputs.app || github.event.client_payload.app }}
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  bump:
+    name: Bump ${{ github.event.inputs.app || github.event.client_payload.app }}
+    runs-on: macos-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Homebrew
+        uses: Homebrew/actions/setup-homebrew@main
+
+      - name: Update Cask Definition
+        id: update
+        shell: bash
+        run: |
+          APP="${{ github.event.inputs.app }}"
+          [ -z "$APP" ] && APP="${{ github.event.client_payload.app }}"
+
+          VERSION="${{ github.event.inputs.version }}"
+          [ -z "$VERSION" ] && VERSION="${{ github.event.client_payload.version }}"
+
+          # Strip any leading 'v' if passed accidentally
+          VERSION="${VERSION#v}"
+
+          SHA256="${{ github.event.inputs.sha256 }}"
+          [ -z "$SHA256" ] && SHA256="${{ github.event.client_payload.sha256 }}"
+
+          if [ -z "$APP" ] || [ -z "$VERSION" ]; then
+            echo "::error::Both 'app' and 'version' must be specified."
+            exit 1
+          fi
+
+          case "$APP" in
+            magimail) NAME="Magimail" ;;
+            magical) NAME="Magical" ;;
+            *)
+              echo "::error::Unknown app: $APP (must be 'magimail' or 'magical')"
+              exit 1
+              ;;
+          esac
+
+          if [ -z "$SHA256" ]; then
+            URL="https://github.com/alxhslm/magic-apps/releases/download/${APP}-v${VERSION}/${NAME}-${VERSION}-arm64.dmg"
+            echo "Downloading $URL to calculate SHA256..."
+            SHA256=$(curl -sSL "$URL" | shasum -a 256 | awk '{print $1}')
+            if [ -z "$SHA256" ] || [ "$SHA256" = "da39a3ee5e6b4b0d3255bfef95601890afd80709" ]; then
+              echo "::error::Failed to calculate SHA256 from $URL"
+              exit 1
+            fi
+          fi
+
+          echo "Bumping $APP to version $VERSION ($SHA256)"
+
+          python3 -c "
+          import re, sys
+          path, ver, sha = sys.argv[1], sys.argv[2], sys.argv[3]
+          c = open(path).read()
+          c = re.sub(r'version \"[^\"]+\"', f'version \"{ver}\"', c, count=1)
+          c = re.sub(r'sha256 \"[^\"]+\"', f'sha256 \"{sha}\"', c, count=1)
+          open(path, 'w').write(c)
+          " "Casks/${APP}.rb" "$VERSION" "$SHA256"
+
+          echo "app=$APP" >> "$GITHUB_OUTPUT"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Run brew style
+        run: brew style alxhslm/magic-apps
+
+      - name: Run brew audit
+        run: brew audit --cask alxhslm/magic-apps/${{ steps.update.outputs.app }}
+
+      - name: Commit and push changes
+        shell: bash
+        run: |
+          APP="${{ steps.update.outputs.app }}"
+          VERSION="${{ steps.update.outputs.version }}"
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          if git diff --quiet "Casks/${APP}.rb"; then
+            echo "No changes detected in Casks/${APP}.rb"
+            exit 0
+          fi
+
+          git add "Casks/${APP}.rb"
+          git commit -m "chore(${APP}): bump to ${VERSION}"
+          git push origin main
