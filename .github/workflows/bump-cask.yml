@@ -117,4 +117,5 @@ jobs:
 
           git add "Casks/${APP}.rb"
           git commit -m "chore(${APP}): bump to ${VERSION}"
+          git remote set-url origin "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git"
           git push origin main
