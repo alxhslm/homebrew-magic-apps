@@ -1,6 +1,6 @@
 cask "magimail" do
-  version "0.5.0"
-  sha256 "a55735bb64f9e33a2e39ff6be77386357cc5711e275f3d87f068b4faaf64ba4a"
+  version "0.6.0"
+  sha256 "789e947793f715cb45a01cb30aee286db8a893d030ea6eef673c2060f530d0ce"
 
   url "https://github.com/alxhslm/magic-apps/releases/download/magimail-v#{version}/Magimail-#{version}-arm64.dmg"
   name "Magimail"
