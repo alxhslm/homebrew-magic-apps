@@ -1,6 +1,6 @@
 cask "magical" do
-  version "0.5.0"
-  sha256 "64efa63d0dc302ea296ed3f0e43513e6681ff9237a13428e84efeb9340f8013d"
+  version "0.6.0"
+  sha256 "15c3c767cc6946f07797c435bdb9e75923e3b9f564e6ead81875dcd0593df2b0"
 
   url "https://github.com/alxhslm/magic-apps/releases/download/magical-v#{version}/Magical-#{version}-arm64.dmg"
   name "Magical"
